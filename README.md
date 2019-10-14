@@ -43,7 +43,7 @@ as installs Ubuntu application packages from the Internet.
 
 ```
 npm install -g yo
-npm install -g generator-mitosis
+npm install -g generator-infra
 yo mitosis
 ```
 
