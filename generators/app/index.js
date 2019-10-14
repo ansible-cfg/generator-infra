@@ -15,27 +15,13 @@ class gen extends Generator {
     prompting() {
         // eslint-disable-line no-use-before-define
         const name =
-      '\n' +
-      '\n                                                  .:                                   ."            ' +
-      '\n                                                 +++                                  +++           ' +
-      '\n                     ,;;;`                      .+++  +++                             +++           ' +
-      '\n            `;;`    :;;;;;,                      ++`  +++                             ++`           ' +
-      '\n           ;;;;;;   ;;;;;;;                           +++                                           ' +
-      '\n          :;;;;;;: :;;;;;;;`    "++++  ++++"     ++"  ++++++      `.        .++++++   +++    "+++++`' +
-      '\n   .:.    ;;;;;;;; :;;;;;;;`   ++++++++++++++    ++"  ++++++    :;;;;;`    ++++++++   +++  .+++++++`' +
-      '\n `;;;;;   ;;;;;;;;  ;;;;;;;   +++"  ++++` "+++   ++"  +++:::   :;;;;;;;   ;++"    .   +++  +++.   ``' +
-      '\n ;;;;;;;  ;;;;;;;;  :;;;;;,   +++   .++,   +++   ++"  +++      ;;;;;;;;;  +++,        +++  +++      ' +
-      '\n,;;;;;;;  :;;;;;;.   ,;;;`    +++   `++`   +++   ++"  +++     :;;;;;;;;;  `++++++:    +++  +++++++` ' +
-      '\n:;;;;;;;.  ;;;;;;      .`     +++   `++`   +++   ++"  +++     ;;;;;;;;;;`  `+++++++   +++   ;+++++++' +
-      '\n.;;;;;;;  ;;;;;;;;   ;;;;;    +++   `++`   +++   ++"  +++     ;;;;;;;;;;       .++++  +++       :+++' +
-      '\n ;;;;;;;  ;;;;;;;;  ;;;;;;;   +++   `++`   +++   ++"  ;++:    `;;;;;;;;;         +++  +++        ;++' +
-      '\n  ;;;;;   ;;;;;;;;  ;;;;;;;.  +++   `++`   +++   ++"   +++++   ;;;;;;;;.  ++";;++++,  +++  +";;"++++' +
-      '\n   `,`    ;;;;;;;; .;;;;;;;:  +++   `++`   +++   ++"   ;++++    ;;;;;;,   ++++++++"   +++  ++++++++`' +
-      '\n           ;;;;;;  `;;;;;;;,  +++   `++`   +++   ++"     ;+;      :;,     "+++++;     ;;;  ++++++.  ' +
-      '\n            ;;;;    ;;;;;;;             ' +
-      '\n                     ;;;;;`        ' +
-      '\n                      .:,       ';
-
+        '\n    ██╗███╗   ██╗███████╗██████╗  █████╗   '+
+        '\n    ██║████╗  ██║██╔════╝██╔══██╗██╔══██╗  '+
+        '\n    ██║██╔██╗ ██║█████╗  ██████╔╝███████║  '+
+        '\n    ██║██║╚██╗██║██╔══╝  ██╔══██╗██╔══██║  '+
+        '\n    ██║██║ ╚████║██║     ██║  ██║██║  ██║  '+
+        '\n    ╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝  '+
+        '\n';
         this.log(name);
         this.log(`\nWelcome to the ${chalk.red('Infra')} generator v.1.0.0-alpha.17! (Do not use in Production) \n`);
         this.log('Documentation for creating an infrastructure: https://github.com/ansible-cfg/generator-infra');
@@ -65,8 +51,8 @@ class gen extends Generator {
             type: 'list',
             name: 'os',
             choices: [
-                { value: 'ubuntu', name: 'Ubuntu' }
-            //   ,{ value: 'centos', name:'CentOS'}
+                { value: 'ubuntu', name: 'Ubuntu' },
+                { value: 'centos', name:'CentOS'}
             ],
             message: '(2/8) Operating System of my infrastructure',
             default: 'ubuntu'
@@ -445,7 +431,7 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/_mitosis-elk-playbook.yml'),
+            this.templatePath('ansible/swarm/_infra-elk-playbook.yml'),
             this.destinationPath(`ansible/swarm/${this.answers.appName}-elk-playbook.yml`),
             {
                 appName: this.answers.appName,

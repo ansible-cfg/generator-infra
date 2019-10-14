@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/NirbyApp/generator-mitosis.git"
+    "url": "git+https://github.com/ansible-cfg/generator-infra.git"
   },
   "keywords": [
     "yeoman-generator",
@@ -54,15 +54,15 @@
     "X-PACK"
   ],
   "author": {
-    "name": "Nirby",
-    "email": "",
-    "url": "https://nirbyapp.com"
+    "name": "Patrick LUZOLO",
+    "email": "eldorplus@gmail.com",
+    "url": "https://eldorplus.com"
   },
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/NirbyApp/generator-mitosis/issues"
+    "url": "https://github.com/ansible-cfg/generator-infra/issues"
   },
-  "homepage": "https://github.com/NirbyApp/generator-mitosis#readme",
+  "homepage": "https://github.com/ansible-cfg/generator-infra#readme",
   "dependencies": {
     "chalk": "2.4.1",
     "date-util": "1.2.1",

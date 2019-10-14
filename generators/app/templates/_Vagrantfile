@@ -48,7 +48,7 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "<% if (os === "ubuntu") { %>bento/ubuntu-16.04<% } %><% if (os === "centos") { %>tsihosting/centos7<% } %>"
+  config.vm.box = "<% if (os === "ubuntu") { %>ubuntu/trusty64<% } %><% if (os === "centos") { %>centos/7<% } %>"
 
   config.vm.provider 'virtualbox' do |v|
     v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
