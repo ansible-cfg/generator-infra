@@ -454,7 +454,7 @@ class gen extends Generator {
         );
         /** swarm roles */
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-base/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-base/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-base/tasks/main.yml`),
             {
                 appName: this.answers.appName,
@@ -462,14 +462,14 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-common/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-common/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-common/tasks/main.yml`),
             {
                 appName: this.answers.appName
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-swarm-manager/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-swarm-manager/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-swarm-manager/tasks/main.yml`),
             {
                 appName: this.answers.appName,
@@ -477,7 +477,7 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-swarm-network/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-swarm-network/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-swarm-network/tasks/main.yml`),
             {
                 appName: this.answers.appName,
@@ -486,7 +486,7 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-services/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-services/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-services/tasks/main.yml`),
             {
                 appName: this.answers.appName,
@@ -496,7 +496,7 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-traefik/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-traefik/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-traefik/tasks/main.yml`),
             {
                 appName: this.answers.appName,
@@ -504,7 +504,7 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-elk/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-elk/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/tasks/main.yml`),
             {
                 appName: this.answers.appName,
@@ -512,35 +512,35 @@ class gen extends Generator {
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-elk/files/elk/elasticsearch/config/_elasticsearch.yml'),
+            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/elasticsearch/config/_elasticsearch.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/elasticsearch/config/elasticsearch.yml`),
             {
                 appName: this.answers.appName
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-elk/files/elk/logstash/config/_logstash.yml'),
+            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/logstash/config/_logstash.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/logstash/config/logstash.yml`),
             {
                 appName: this.answers.appName
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-elk/files/elk/logstash/pipeline/_logstash.conf'),
+            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/logstash/pipeline/_logstash.conf'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/logstash/pipeline/logstash.conf`),
             {
                 appName: this.answers.appName
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-elk/files/elk/kibana/config/_kibana.yml'),
+            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/kibana/config/_kibana.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/kibana/config/kibana.yml`),
             {
                 appName: this.answers.appName
             }
         );
         this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/mitosis-swarm-worker/tasks/_main.yml'),
+            this.templatePath('ansible/swarm/roles/infra-swarm-worker/tasks/_main.yml'),
             this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-swarm-worker/tasks/main.yml`),
             {
                 appName: this.answers.appName
