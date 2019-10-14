@@ -15,12 +15,12 @@ class gen extends Generator {
     prompting() {
         // eslint-disable-line no-use-before-define
         const name =
-        '\n    ██╗███╗   ██╗███████╗██████╗  █████╗   '+
-        '\n    ██║████╗  ██║██╔════╝██╔══██╗██╔══██╗  '+
-        '\n    ██║██╔██╗ ██║█████╗  ██████╔╝███████║  '+
-        '\n    ██║██║╚██╗██║██╔══╝  ██╔══██╗██╔══██║  '+
-        '\n    ██║██║ ╚████║██║     ██║  ██║██║  ██║  '+
-        '\n    ╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝  '+
+        '\n    ██╗███╗   ██╗███████╗██████╗  █████╗   ' +
+        '\n    ██║████╗  ██║██╔════╝██╔══██╗██╔══██╗  ' +
+        '\n    ██║██╔██╗ ██║█████╗  ██████╔╝███████║  ' +
+        '\n    ██║██║╚██╗██║██╔══╝  ██╔══██╗██╔══██║  ' +
+        '\n    ██║██║ ╚████║██║     ██║  ██║██║  ██║  ' +
+        '\n    ╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝  ' +
         '\n';
         this.log(name);
         this.log(`\nWelcome to the ${chalk.red('Infra')} generator v.1.0.0-alpha.17! (Do not use in Production) \n`);
@@ -52,7 +52,7 @@ class gen extends Generator {
             name: 'os',
             choices: [
                 { value: 'ubuntu', name: 'Ubuntu' },
-                { value: 'centos', name:'CentOS'}
+                { value: 'centos', name: 'CentOS' }
             ],
             message: '(2/8) Operating System of my infrastructure',
             default: 'ubuntu'
