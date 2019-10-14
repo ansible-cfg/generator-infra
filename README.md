@@ -1,13 +1,13 @@
-# Mitosis - Microservices infrastructure generator
+# Infra - Microservices infrastructure generator
 
 <h1>This repo is severely outdated!</h1>
 
-[![npm version](https://badge.fury.io/js/generator-mitosis.svg)](https://badge.fury.io/js/generator-mitosis)
-[![build](https://travis-ci.org/Chabane/generator-mitosis.svg?branch=master)](https://travis-ci.org/Chabane/generator-mitosis)
-[![coverage](https://codecov.io/gh/Chabane/generator-mitosis/branch/master/graph/badge.svg)](https://codecov.io/gh/Chabane/generator-mitosis)
-[![dependency](https://david-dm.org/Chabane/generator-mitosis.svg?theme=shields.io)](https://david-dm.org/Chabane/generator-mitosis)
+[![npm version](https://badge.fury.io/js/generator-infra.svg)](https://badge.fury.io/js/generator-infra)
+[![build](https://travis-ci.org/Chabane/generator-infra.svg?branch=master)](https://travis-ci.org/Chabane/generator-infra)
+[![coverage](https://codecov.io/gh/Chabane/generator-infra/branch/master/graph/badge.svg)](https://codecov.io/gh/Chabane/generator-infra)
+[![dependency](https://david-dm.org/Chabane/generator-infra.svg?theme=shields.io)](https://david-dm.org/Chabane/generator-mitosis)
 
-A microservices infrastructure yeoman generator. Mitosis is inspired from solutions like AWS Cloudformation and Google Cloud Deployment Manager.
+A microservices infrastructure yeoman generator. Infra is inspired from solutions like AWS Cloudformation and Google Cloud Deployment Manager.
 
 It allows developers to load, organize, execute, evolve, administrate and stop microservices using few mitosis commands lines.
 
