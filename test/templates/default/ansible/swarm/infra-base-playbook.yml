@@ -1,0 +1,17 @@
+---
+- hosts: all
+  name: "** Infra Base **"
+  gather_facts: false
+  become: yes
+  become_user: root
+  vars:
+    infra_home: /opt/infra
+    docker_service: /usr/lib/systemd/system/docker.service
+  pre_tasks:
+   - name: 'Installing python2'
+     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  roles:
+    - infra-common
+    - infra-base
+
+  

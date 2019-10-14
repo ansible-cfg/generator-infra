@@ -5,7 +5,7 @@ metadata:
   name: artifactory
   labels:
     name: artifactory
-  namespace: <%= appName %>
+  namespace: infra
 spec:
   replicas: 2
   template:
@@ -25,7 +25,7 @@ metadata:
   name: artifactory
   labels:
     name: artifactory
-  namespace: <%= appName %>
+  namespace: infra
 spec:
   type: NodePort
   ports:
@@ -34,4 +34,3 @@ spec:
     targetPort: 9999
     nodePort: 30003
   selector:
-    app: infra

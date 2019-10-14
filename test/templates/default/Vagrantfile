@@ -48,7 +48,7 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.box = "ubuntu/trusty64"
 
   config.vm.provider 'virtualbox' do |v|
     v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
@@ -57,8 +57,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.insert_key = false
 
   (1..MANAGERS).each do |manager_id|
-    config.vm.define "mitosis-manager#{manager_id}" do |manager|
-      manager.vm.hostname = "mitosis-manager#{manager_id}"
+    config.vm.define "infra-manager#{manager_id}" do |manager|
+      manager.vm.hostname = "infra-manager#{manager_id}"
       manager.ssh.forward_agent = true
       manager.ssh.insert_key = true
       #manager.vm.provision :shell, :path => "scripts/setup_ubuntu.sh"
@@ -79,15 +79,15 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       manager.vm.provider "virtualbox" do |v|
         v.memory = 2048
         v.cpus = 2
-        v.name = "mitosis-manager#{manager_id}"
+        v.name = "infra-manager#{manager_id}"
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
       end
     end
   end
 
   (1..workers).each do |worker_id|
-    config.vm.define "mitosis-worker#{worker_id}" do |worker|
-      worker.vm.hostname = "mitosis-worker#{worker_id}"
+    config.vm.define "infra-worker#{worker_id}" do |worker|
+      worker.vm.hostname = "infra-worker#{worker_id}"
       worker.ssh.forward_agent = true
       worker.ssh.insert_key = true
       #worker.vm.provision :shell, :path => "scripts/setup_ubuntu.sh"
@@ -96,7 +96,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       worker.vm.synced_folder '.', '/vagrant', disabled: true
       worker.vm.provider "virtualbox" do |v|
         v.memory = 1024
-        v.name = "mitosis-worker#{worker_id}"
+        v.name = "infra-worker#{worker_id}"
       end
 
       # Only execute once the Ansible provisioner,
@@ -105,50 +105,50 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         if caasModeParameter == "swarm"
             worker.vm.provision "base", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/swarm/mitosis-base-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/swarm/infra-base-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "images", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/images/mitosis-images-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/images/infra-images-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "swarm", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/swarm/mitosis-swarm-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/swarm/infra-swarm-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
             
             worker.vm.provision "traefik", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/swarm/mitosis-traefik-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/swarm/infra-traefik-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "elk", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/swarm/mitosis-elk-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/swarm/infra-elk-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end    
                   
             worker.vm.provision "services", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/swarm/mitosis-services-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/swarm/infra-services-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "registry", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/images/mitosis-registry-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/images/infra-registry-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
@@ -156,29 +156,29 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         if caasModeParameter == "k8s"
             worker.vm.provision "base", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/k8s/mitosis-base-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/k8s/infra-base-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "images", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/images/mitosis-images-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/images/infra-images-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
             
             worker.vm.provision "k8s", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/k8s/mitosis-k8s-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/k8s/infra-k8s-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "registry", type: "ansible" do |ansible|
-              ansible.playbook = "ansible/images/mitosis-registry-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/mitosis-hosts"]
+              ansible.playbook = "ansible/images/infra-registry-playbook.yml"
+              ansible.raw_arguments = ["--inventory=ansible/infra-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end

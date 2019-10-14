@@ -1,0 +1,32 @@
+---
+- hosts: infra_managers[0]
+  name: "** infra Manager **"
+  become: yes
+  become_user: root
+  vars:
+    docker_service: /usr/lib/systemd/system/docker.service
+    infra_home: /opt/infra
+    manager_ip: 192.168.77.21
+    swarm_bind_port: 2377
+  roles:
+    - infra-swarm-manager
+
+- hosts: infra_workers
+  name: "** infra Worker **"
+  become: yes
+  become_user: root
+  vars:
+    infra_home: /opt/infra
+    manager_ip: 192.168.77.21
+    swarm_bind_port: 2377
+    docker_service: /usr/lib/systemd/system/docker.service
+  roles:
+    - infra-swarm-worker       
+
+- hosts: infra_managers[0]
+  name: "** infra Network **"
+  become: yes
+  become_user: root
+  roles:
+    - infra-swarm-network         
+  

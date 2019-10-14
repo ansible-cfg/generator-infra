@@ -5,11 +5,11 @@
 [![npm version](https://badge.fury.io/js/generator-infra.svg)](https://badge.fury.io/js/generator-infra)
 [![build](https://travis-ci.org/Chabane/generator-infra.svg?branch=master)](https://travis-ci.org/Chabane/generator-infra)
 [![coverage](https://codecov.io/gh/Chabane/generator-infra/branch/master/graph/badge.svg)](https://codecov.io/gh/Chabane/generator-infra)
-[![dependency](https://david-dm.org/Chabane/generator-infra.svg?theme=shields.io)](https://david-dm.org/Chabane/generator-mitosis)
+[![dependency](https://david-dm.org/Chabane/generator-infra.svg?theme=shields.io)](https://david-dm.org/Chabane/generator-infra)
 
 A microservices infrastructure yeoman generator. Infra is inspired from solutions like AWS Cloudformation and Google Cloud Deployment Manager.
 
-It allows developers to load, organize, execute, evolve, administrate and stop microservices using few mitosis commands lines.
+It allows developers to load, organize, execute, evolve, administrate and stop microservices using few infra commands lines.
 
 And It takes advantage of the following solutions/technologies (alpha):
 
@@ -22,9 +22,9 @@ And It takes advantage of the following solutions/technologies (alpha):
 - `Aritfactory` artefacts deployment
 - `Sonarqube` quality
 
-To prove it efficiency, mitosis generates 2 default microservices, connected to an event's bus using kafka
+To prove it efficiency, infra generates 2 default microservices, connected to an event's bus using kafka
 
-1 consumer [NodeJS](https://github.com/Chabane/mitosis-microservice-nodejs-angular) & 1 consumer [Apache Spark](https://github.com/Chabane/mitosis-microservice-spark-cassandra) & 1 producer [Java](https://github.com/Chabane/mitosis-microservice-spring-reactor)
+1 consumer [NodeJS](https://github.com/Chabane/infra-microservice-nodejs-angular) & 1 consumer [Apache Spark](https://github.com/Chabane/infra-microservice-spark-cassandra) & 1 producer [Java](https://github.com/Chabane/infra-microservice-spring-reactor)
 
 <img src="http://chabanerefes.info/prez_1/images/swarm_diagramme.png"/>
 
@@ -44,7 +44,7 @@ as installs Ubuntu application packages from the Internet.
 ```
 npm install -g yo
 npm install -g generator-infra
-yo mitosis
+yo infra
 ```
 
 The code generated contains a `Vagrantfile` and associated `Ansible` playbook scripts
@@ -74,11 +74,11 @@ docker service ls
 ```
 ```
 ID            NAME            REPLICAS  IMAGE                COMMAND
-654jtwzg8n8k  jenkins        replicated  2/2       mitosis/jenkins:1.0.0-alpha.0
-7xrhx2d74b3l  sonarqube      replicated  2/2       mitosis/sonarqube:1.0.0-alpha.0
+654jtwzg8n8k  jenkins        replicated  2/2       infra/jenkins:1.0.0-alpha.0
+7xrhx2d74b3l  sonarqube      replicated  2/2       infra/sonarqube:1.0.0-alpha.0
 9y8ycnri8e3s  kibana         replicated  1/1       kibana:5.2.0
 m4n86is529p0  viz            replicated  1/1       manomarks/visualizer:latest
-n49nex6feeh8  artifactory    replicated  2/2       mitosis/artifactory:1.0.0-alpha.0
+n49nex6feeh8  artifactory    replicated  2/2       infra/artifactory:1.0.0-alpha.0
 ncccc0wi7j2l  registry       global      2/2       registry:2
 p7znkv9p41sx  portainer      replicated  1/1       portainer/portainer:1.11.3
 r8dznb7p4dpj  logstash       replicated  1/1       logstash:5.2.0
@@ -98,7 +98,7 @@ UpdateConfig:
  Parallelism:	1
  On failure:	pause
 ContainerSpec:
- Image:		mitosis/artifactory:1.0.0-alpha.0
+ Image:		infra/artifactory:1.0.0-alpha.0
 Resources:
 Networks: atqmyyz6jctr34t64o69tyolu
 Ports:
@@ -153,10 +153,10 @@ Expected for the beta version :
  - Add new solutions like : Rancher, Chef, Puppet, Terraform, HAProxy, etc.
 
 ### Follow the development
-You can follow the development of Mitosis via the public Mitosis board on [`Trello`](https://trello.com/b/TCgfbNXK/mitosis)
+You can follow the development of infra via the public infra board on [`Trello`](https://trello.com/b/TCgfbNXK/infra)
 
 ## Contributing
 `Pull requests` are welcome;
 
 ## License
-Mitosis generator is released under version 2.0 of the [Apache License](LICENSE).
+infra generator is released under version 2.0 of the [Apache License](LICENSE).

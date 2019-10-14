@@ -1,0 +1,10 @@
+---
+- name: Deploy traefik
+  hosts: infra_managers[0]
+  become: yes
+  become_user: root
+  vars:
+    manager_ip: 192.168.77.21
+  roles:
+    - infra-traefik
+

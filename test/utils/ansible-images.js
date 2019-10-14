@@ -2,10 +2,10 @@ const ANSIBLE_IMAGES_DIR = 'ansible/images';
 
 const ansibleImages = {
     default: {
-        playbook: `${ANSIBLE_IMAGES_DIR}/mitosis-images-playbook.yml`
+        playbook: `${ANSIBLE_IMAGES_DIR}/infra-images-playbook.yml`
     },
     registry: {
-        playbook: `${ANSIBLE_IMAGES_DIR}/mitosis-registry-playbook.yml`,
+        playbook: `${ANSIBLE_IMAGES_DIR}/infra-registry-playbook.yml`,
         k8s: {
             script: `${ANSIBLE_IMAGES_DIR}/registry/port-forward.sh`,
             files: {

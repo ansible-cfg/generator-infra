@@ -5,7 +5,7 @@ metadata:
   name: jenkins
   labels:
     name: jenkins
-  namespace: <%= appName %>
+  namespace: infra
 spec:
   replicas: 2
   template:
@@ -15,12 +15,10 @@ spec:
     spec:
       containers:
       - name: jenkins
-        <% if (defaultMicroService) { %>  
+          
         image: infra/jenkins:1.0.0-alpha.5
-        <% } %>  
-        <% if (!defaultMicroService) { %>  
-        image: infra/jenkins:default1.0.0-alpha.2
-        <% } %>  
+          
+          
         ports:
         - name: jenkins
           containerPort: 8080
@@ -43,7 +41,7 @@ metadata:
   name: jenkins
   labels:
     name: jenkins
-  namespace: <%= appName %>
+  namespace: infra
 spec:
   type: NodePort
   ports:
@@ -52,4 +50,4 @@ spec:
     targetPort: 8082
     nodePort: 30001
   selector:
-    app: infra
+    name: jenkins

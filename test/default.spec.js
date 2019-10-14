@@ -22,7 +22,7 @@ describe('Simple infrastructure', () => {
                     }
                 })
                 .withPrompts({
-                    appName: 'mitosis',
+                    appName: 'infra',
                     os: 'ubuntu',
                     caasMode: 'swarm',
                     tools: [
@@ -42,7 +42,7 @@ describe('Simple infrastructure', () => {
 
         it('creates expected files for default generation - Vagrantfile', () => {
             assert.file(expectedFiles.vagrant.default);
-            assert.fileContent(expectedFiles.vagrant.default, /bento\/ubuntu-16.04/);
+            assert.fileContent(expectedFiles.vagrant.default, /ubuntu\/trusty64/);
         });
 
         it('creates expected files for default generation - Ansible - Hosts', () => {
@@ -122,7 +122,7 @@ describe('Simple infrastructure', () => {
             assert.file(expectedFiles.ansible.k8s.master.roles.files.networks.flannel);
             assert.file(expectedFiles.ansible.k8s.master.roles.files.services.artifactory);
             assert.file(expectedFiles.ansible.k8s.master.roles.files.services.jenkins);
-            assert.fileContent(expectedFiles.ansible.k8s.master.roles.files.services.jenkins, /mitosis\/jenkins:1.0.0-alpha.5/);
+            assert.fileContent(expectedFiles.ansible.k8s.master.roles.files.services.jenkins, /infra\/jenkins:1.0.0-alpha.5/);
             assert.file(expectedFiles.ansible.k8s.master.roles.files.services.namespace);
             assert.file(expectedFiles.ansible.k8s.master.roles.files.services.sonarqube);
             assert.file(expectedFiles.ansible.k8s.master.roles.files.services.traefik);
@@ -139,8 +139,8 @@ describe('Simple infrastructure', () => {
             // Registry
             assert.file(expectedFiles.ansible.images.registry.playbook);
             assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /Create local registry/);
-            assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /Ensure mitosis registry/);
-            assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /Copy mitosis registry/);
+            assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /Ensure infra registry/);
+            assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /Copy infra registry/);
             assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /Launch the Kubernetes registry/);
             assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /set up a port-forward from our local node to a running Pod/);
             assert.noFileContent(expectedFiles.ansible.images.registry.playbook, /kubectl port-forward/);

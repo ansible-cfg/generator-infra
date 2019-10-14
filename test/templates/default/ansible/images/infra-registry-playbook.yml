@@ -1,0 +1,10 @@
+- hosts: infra_managers[0]
+  name: "** infra registry base **"
+  gather_facts: false
+  become: yes
+  become_user: root
+  serial: 1
+  vars:
+    infra_home: /opt/infra
+    manager_ip: 192.168.77.21
+  tasks:

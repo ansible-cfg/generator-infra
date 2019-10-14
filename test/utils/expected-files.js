@@ -10,7 +10,7 @@ const expectedFiles = {
         k8s: ansibleK8s,
         swarm: ansibleSwarm,
         hosts: {
-            default: `${ANSIBLE_DIR}/mitosis-hosts`
+            default: `${ANSIBLE_DIR}/infra-hosts`
         }
     },
     vagrant: {
