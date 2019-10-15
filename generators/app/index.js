@@ -183,6 +183,19 @@ class gen extends Generator {
         },
         {
             type: 'input',
+            name: 'managers',
+            message: 'Number of managers',
+            default: 1,
+            when: response => response.initVms,
+            validate: (name) => {
+                if (name && !/\d+/.test(name)) {
+                    return 'Manager number should only consist of 0~9';
+                }
+                return true;
+            }
+        },
+        {
+            type: 'input',
             name: 'workers',
             message: 'Number of workers',
             default: 1,
@@ -209,7 +222,7 @@ class gen extends Generator {
         },
         {
             type: 'input',
-            name: 'memoryManager',
+            name: 'memoryManagers',
             message: 'Memory of cluster manager (Mo)',
             default: 2048,
             when: response => response.initVms,
@@ -251,8 +264,9 @@ class gen extends Generator {
                 appName: this.answers.appName,
                 caasMode: this.answers.caasMode,
                 memoryWorkers: this.answers.memoryWorkers ? this.answers.memoryWorkers : 1024,
-                memoryManager: this.answers.memoryManager ? this.answers.memoryManager : 2048,
+                memoryManagers: this.answers.memoryManagers ? this.answers.memoryManagers : 2048,
                 os: this.answers.os,
+                managers: this.answers.managers ? this.answers.managers : 1,
                 workers: this.answers.workers ? this.answers.workers : 2,
                 ownRegistry: this.answers.ownRegistry,
                 defaultIp
@@ -266,6 +280,7 @@ class gen extends Generator {
             {
                 appName: this.answers.appName,
                 os: this.answers.os,
+                managers: this.answers.managers ? this.answers.managers : 1,
                 workers: this.answers.workers ? this.answers.workers : 2,
                 defaultIp
             }

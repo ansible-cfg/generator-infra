@@ -4,7 +4,7 @@
 require 'getoptlong'
 
 VAGRANTFILE_API_VERSION = "2"
-MANAGERS = 1
+managers = <%= managers %>
 workers = <%= workers %>
 
 opts = GetoptLong.new(
@@ -56,7 +56,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.ssh.insert_key = false
 
-  (1..MANAGERS).each do |manager_id|
+  (1..managers).each do |manager_id|
     config.vm.define "<%= appName %>-manager#{manager_id}" do |manager|
       manager.vm.hostname = "<%= appName %>-manager#{manager_id}"
       manager.ssh.forward_agent = true
@@ -77,7 +77,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       manager.vm.synced_folder '.', '/vagrant', disabled: true
 
       manager.vm.provider "virtualbox" do |v|
-        v.memory = <%= memoryManager %>
+        v.memory = <%= memoryManagers %>
         v.cpus = 2
         v.name = "<%= appName %>-manager#{manager_id}"
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
