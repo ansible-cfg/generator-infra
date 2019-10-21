@@ -5,6 +5,7 @@ const uuidV1 = require('uuid/v1');
 const exec = require('child_process').exec;
 const path = require('path');
 const fs = require('fs');
+const version = require('../../package.json').version;
 require('date-util');
 
 class gen extends Generator {
@@ -23,7 +24,7 @@ class gen extends Generator {
         '\n    ╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝  ' +
         '\n';
         this.log(name);
-        this.log(`\nWelcome to the ${chalk.red('Infra')} generator v.1.0.0-alpha.17! (Do not use in Production) \n`);
+        this.log(`\nWelcome to the ${chalk.red('Infra')} generator ${chalk.green('v'+ version)}! \n`);
         this.log('Documentation for creating an infrastructure: https://github.com/ansible-cfg/generator-infra');
         this.log(`Infrastructure files will be generated in folder: ${chalk.yellow(process.cwd())}\n`);
 
