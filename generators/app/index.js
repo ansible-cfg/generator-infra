@@ -24,7 +24,7 @@ class gen extends Generator {
         '\n    ╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝  ' +
         '\n';
         this.log(name);
-        this.log(`\nWelcome to the ${chalk.red('Infra')} generator ${chalk.green('v'+ version)}! \n`);
+        this.log(`\nWelcome to the ${chalk.red('Infra')} generator ${chalk.green(`v${version}`)}! \n`);
         this.log('Documentation for creating an infrastructure: https://github.com/ansible-cfg/generator-infra');
         this.log(`Infrastructure files will be generated in folder: ${chalk.yellow(process.cwd())}\n`);
 
