@@ -257,10 +257,25 @@ class gen extends Generator {
         const defaultManagerIp = '192.168.77.21';
         const workerToken = uuidV1();
 
+        const copy = (src, dest, params) => {
+            if (!dest) {
+                dest = src;
+            }
+            try {
+                this.fs.copyTpl(
+                    this.templatePath(src),
+                    this.destinationPath(dest),
+                    params
+                );
+            } catch (err) {
+                console.log(`Error copying template: ${src}`, err);
+            }
+        };
+
         // copy vagrantfile
-        this.fs.copyTpl(
-            this.templatePath('_Vagrantfile'),
-            this.destinationPath('Vagrantfile'),
+        copy(
+            '_Vagrantfile',
+            'Vagrantfile',
             {
                 appName: this.answers.appName,
                 caasMode: this.answers.caasMode,
@@ -275,9 +290,9 @@ class gen extends Generator {
         );
 
         // copy ansible hosts
-        this.fs.copyTpl(
-            this.templatePath('ansible/_infra-hosts'),
-            this.destinationPath(`ansible/${this.answers.appName}-hosts`),
+        copy(
+            'ansible/_infra-hosts',
+            `ansible/${this.answers.appName}-hosts`,
             {
                 appName: this.answers.appName,
                 os: this.answers.os,
@@ -288,9 +303,9 @@ class gen extends Generator {
         );
 
         // copy ansible images
-        this.fs.copyTpl(
-            this.templatePath('ansible/images/_infra-images-playbook.yml'),
-            this.destinationPath(`ansible/images/${this.answers.appName}-images-playbook.yml`),
+        copy(
+            'ansible/images/_infra-images-playbook.yml',
+            `ansible/images/${this.answers.appName}-images-playbook.yml`,
             {
                 appName: this.answers.appName,
                 docker_registry_server: this.answers.docker_registry_server === 'hub.docker.com' ? '' : this.answers.docker_registry_server,
@@ -305,9 +320,9 @@ class gen extends Generator {
         );
 
         // copy ansible images registry
-        this.fs.copyTpl(
-            this.templatePath('ansible/images/_infra-registry-playbook.yml'),
-            this.destinationPath(`ansible/images/${this.answers.appName}-registry-playbook.yml`),
+        copy(
+            'ansible/images/_infra-registry-playbook.yml',
+            `ansible/images/${this.answers.appName}-registry-playbook.yml`,
             {
                 appName: this.answers.appName,
                 defaultMicroService: this.answers.defaultMicroService,
@@ -317,237 +332,240 @@ class gen extends Generator {
             }
         );
 
-        // copy ansible k8s
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/_infra-base-playbook.yml'),
-            this.destinationPath(`ansible/k8s/${this.answers.appName}-base-playbook.yml`),
-            {
-                appName: this.answers.appName,
-                os: this.answers.os,
-                defaultIp
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/_infra-k8s-playbook.yml'),
-            this.destinationPath(`ansible/k8s/${this.answers.appName}-k8s-playbook.yml`),
-            {
-                appName: this.answers.appName,
-                defaultIp,
-                workerToken
-            }
-        );
-        // k8s roles
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-base/tasks/_main.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-base/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                os: this.answers.os
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-master/tasks/_main.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                os: this.answers.os,
-                scheduleManager: this.answers.scheduleManager,
-                docker_registry_repository_name: this.answers.docker_registry_repository_name,
-                tools: this.answers.tools
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-worker/tasks/_main.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-worker/tasks/main.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        // k8s networks
-        this.fs.copy(
-            this.templatePath('ansible/k8s/roles/infra-master/files/networks/_kube-flannel.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/files/networks/kube-flannel.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        // k8s services
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-master/files/services/_sonarqube.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/files/services/sonarqube.yml`),
-            {
-                appName: this.answers.appName,
-                docker_registry_repository_name: this.answers.docker_registry_repository_name
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-master/files/services/_traefik.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/files/services/traefik.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-master/files/services/_artifactory.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/files/services/artifactory.yml`),
-            {
-                appName: this.answers.appName,
-                docker_registry_repository_name: this.answers.docker_registry_repository_name
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-master/files/services/_jenkins.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/files/services/jenkins.yml`),
-            {
-                appName: this.answers.appName,
-                docker_registry_repository_name: this.answers.docker_registry_repository_name,
-                defaultMicroService: this.answers.defaultMicroService,
-                defaultIp: defaultManagerIp
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/k8s/roles/infra-master/files/services/_namespace.yml'),
-            this.destinationPath(`ansible/k8s/roles/${this.answers.appName}-master/files/services/namespace.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        /*
-        * copy ansible swarm 
-        */
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/_infra-base-playbook.yml'),
-            this.destinationPath(`ansible/swarm/${this.answers.appName}-base-playbook.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/_infra-swarm-playbook.yml'),
-            this.destinationPath(`ansible/swarm/${this.answers.appName}-swarm-playbook.yml`),
-            {
-                appName: this.answers.appName,
-                defaultIp
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/_infra-services-playbook.yml'),
-            this.destinationPath(`ansible/swarm/${this.answers.appName}-services-playbook.yml`),
-            {
-                appName: this.answers.appName,
-                defaultIp
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/_infra-traefik-playbook.yml'),
-            this.destinationPath(`ansible/swarm/${this.answers.appName}-traefik-playbook.yml`),
-            {
-                appName: this.answers.appName,
-                defaultIp
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/_infra-elk-playbook.yml'),
-            this.destinationPath(`ansible/swarm/${this.answers.appName}-elk-playbook.yml`),
-            {
-                appName: this.answers.appName,
-                defaultIp
-            }
-        );
-        /** swarm roles */
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-base/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-base/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                os: this.answers.os
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-common/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-common/tasks/main.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-swarm-manager/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-swarm-manager/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                scheduleManager: this.answers.scheduleManager
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-swarm-network/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-swarm-network/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                tools: this.answers.tools,
-                defaultMicroService: this.answers.defaultMicroService
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-services/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-services/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                docker_registry_repository_name: this.answers.docker_registry_repository_name,
-                defaultMicroService: this.answers.defaultMicroService,
-                tools: this.answers.tools
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-traefik/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-traefik/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                tools: this.answers.tools
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-elk/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/tasks/main.yml`),
-            {
-                appName: this.answers.appName,
-                tools: this.answers.tools
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/elasticsearch/config/_elasticsearch.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/elasticsearch/config/elasticsearch.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/logstash/config/_logstash.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/logstash/config/logstash.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/logstash/pipeline/_logstash.conf'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/logstash/pipeline/logstash.conf`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-elk/files/elk/kibana/config/_kibana.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-elk/files/elk/kibana/config/kibana.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
-        this.fs.copyTpl(
-            this.templatePath('ansible/swarm/roles/infra-swarm-worker/tasks/_main.yml'),
-            this.destinationPath(`ansible/swarm/roles/${this.answers.appName}-swarm-worker/tasks/main.yml`),
-            {
-                appName: this.answers.appName
-            }
-        );
+        if (this.answers.caasMode === 'swarm') {
+            /*
+* copy ansible swarm
+*/
+            copy(
+                'ansible/swarm/_infra-base-playbook.yml',
+                `ansible/swarm/${this.answers.appName}-base-playbook.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/swarm/_infra-swarm-playbook.yml',
+                `ansible/swarm/${this.answers.appName}-swarm-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    defaultIp
+                }
+            );
+            copy(
+                'ansible/swarm/_infra-services-playbook.yml',
+                `ansible/swarm/${this.answers.appName}-services-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    defaultIp
+                }
+            );
+            copy(
+                'ansible/swarm/_infra-traefik-playbook.yml',
+                `ansible/swarm/${this.answers.appName}-traefik-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    defaultIp
+                }
+            );
+            copy(
+                'ansible/swarm/_infra-elk-playbook.yml',
+                `ansible/swarm/${this.answers.appName}-elk-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    defaultIp
+                }
+            );
+            /** swarm roles */
+            copy(
+                'ansible/swarm/roles/infra-base/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-base/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    os: this.answers.os
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-common/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-common/tasks/main.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-swarm-manager/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-swarm-manager/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    scheduleManager: this.answers.scheduleManager
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-swarm-network/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-swarm-network/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    tools: this.answers.tools,
+                    defaultMicroService: this.answers.defaultMicroService
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-services/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-services/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    docker_registry_repository_name: this.answers.docker_registry_repository_name,
+                    defaultMicroService: this.answers.defaultMicroService,
+                    tools: this.answers.tools
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-traefik/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-traefik/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    tools: this.answers.tools
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-elk/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-elk/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    tools: this.answers.tools
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-elk/files/elk/elasticsearch/config/_elasticsearch.yml',
+                `ansible/swarm/roles/${this.answers.appName}-elk/files/elk/elasticsearch/config/elasticsearch.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-elk/files/elk/logstash/config/_logstash.yml',
+                `ansible/swarm/roles/${this.answers.appName}-elk/files/elk/logstash/config/logstash.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-elk/files/elk/logstash/pipeline/_logstash.conf',
+                `ansible/swarm/roles/${this.answers.appName}-elk/files/elk/logstash/pipeline/logstash.conf`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-elk/files/elk/kibana/config/_kibana.yml',
+                `ansible/swarm/roles/${this.answers.appName}-elk/files/elk/kibana/config/kibana.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/swarm/roles/infra-swarm-worker/tasks/_main.yml',
+                `ansible/swarm/roles/${this.answers.appName}-swarm-worker/tasks/main.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+        } else {
+            // copy ansible k8s
+            copy(
+                'ansible/k8s/_infra-base-playbook.yml',
+                `ansible/k8s/${this.answers.appName}-base-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    os: this.answers.os,
+                    defaultIp
+                }
+            );
+            copy(
+                'ansible/k8s/_infra-k8s-playbook.yml',
+                `ansible/k8s/${this.answers.appName}-k8s-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    defaultIp,
+                    workerToken
+                }
+            );
+            // k8s roles
+            copy(
+                'ansible/k8s/roles/infra-base/tasks/_main.yml',
+                `ansible/k8s/roles/${this.answers.appName}-base/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    os: this.answers.os
+                }
+            );
+            copy(
+                'ansible/k8s/roles/infra-master/tasks/_main.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/tasks/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    os: this.answers.os,
+                    scheduleManager: this.answers.scheduleManager,
+                    docker_registry_repository_name: this.answers.docker_registry_repository_name,
+                    tools: this.answers.tools
+                }
+            );
+            copy(
+                'ansible/k8s/roles/infra-worker/tasks/_main.yml',
+                `ansible/k8s/roles/${this.answers.appName}-worker/tasks/main.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            // k8s networks
+            copy(
+                'ansible/k8s/roles/infra-master/files/networks/_kube-flannel.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/files/networks/kube-flannel.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            // k8s services
+            copy(
+                'ansible/k8s/roles/infra-master/files/services/_sonarqube.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/files/services/sonarqube.yml`,
+                {
+                    appName: this.answers.appName,
+                    docker_registry_repository_name: this.answers.docker_registry_repository_name
+                }
+            );
+            copy(
+                'ansible/k8s/roles/infra-master/files/services/_traefik.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/files/services/traefik.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+            copy(
+                'ansible/k8s/roles/infra-master/files/services/_artifactory.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/files/services/artifactory.yml`,
+                {
+                    appName: this.answers.appName,
+                    docker_registry_repository_name: this.answers.docker_registry_repository_name
+                }
+            );
+            copy(
+                'ansible/k8s/roles/infra-master/files/services/_jenkins.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/files/services/jenkins.yml`,
+                {
+                    appName: this.answers.appName,
+                    docker_registry_repository_name: this.answers.docker_registry_repository_name,
+                    defaultMicroService: this.answers.defaultMicroService,
+                    defaultIp: defaultManagerIp
+                }
+            );
+            copy(
+                'ansible/k8s/roles/infra-master/files/services/_namespace.yml',
+                `ansible/k8s/roles/${this.answers.appName}-master/files/services/namespace.yml`,
+                {
+                    appName: this.answers.appName
+                }
+            );
+        }
 
         // create the vm
         if (this.answers.initVms) {
