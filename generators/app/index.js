@@ -268,7 +268,7 @@ class gen extends Generator {
                     params
                 );
             } catch (err) {
-                console.log(`Error copying template: ${src}`, err);
+                this.log(`Error copying template: ${src}`, err);
             }
         };
 
