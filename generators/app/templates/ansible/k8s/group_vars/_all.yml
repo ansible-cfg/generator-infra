@@ -1,0 +1,16 @@
+---
+<%= appName %>_home: /opt/<%= appName %>
+manager_ip: <%= defaultIp %>.21
+worker_token : <%= workerToken %>
+packages:
+    - curl
+    - jq
+    - bc
+    - gawk
+    - apt-transport-https
+    - ca-certificates
+    - software-properties-common
+    - openssl
+    - python-openssl
+    - python-setuptools
+    - python-pip

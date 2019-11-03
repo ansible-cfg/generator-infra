@@ -9,12 +9,14 @@
     manager_ip: <%= defaultIp %>.21
   pre_tasks:
   <% if (os === "ubuntu") { %>
-   - name: 'Installing python2'
-     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)    
+   - name: 'Install python for Ansible'
+     raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+     changed_when: False
   <% } %>
   <% if (os === "centos") { %>
-   - name: 'Installing python2'
-     raw: test -e /usr/bin/python || (yum -y update && yum install -y python-minimal)    
+   - name: 'Install python for Ansible'
+     raw: test -e /usr/bin/python || (yum -y update && yum install -y python-minimal)
+     changed_when: False
   <% } %>
   roles:
     - <%= appName %>-base

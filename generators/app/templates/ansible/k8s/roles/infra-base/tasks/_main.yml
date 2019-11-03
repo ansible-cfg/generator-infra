@@ -1,6 +1,25 @@
 ---
-
 <% if (os === "ubuntu") { %>
+- name: Ensure Base Tools
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+
+- name: Ensure Docker Apt Key
+  become: yes
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Ensure Docker Repository
+  become: yes
+  apt_repository:
+    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'
+    state: present
+    update_cache: yes
+
 - name: Ensure Google Cloud Apt Key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
@@ -8,14 +27,15 @@
 
 - name: Ensure Kubernetes Repository
   apt_repository:
-    repo: 'deb http://apt.kubernetes.io/ kubernetes-xenial main'
+    repo: 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
     state: present
-    update_cache: yes
+    filename: kubernetes.list
 
 - name: Ensure Base Kubernetes
   apt:
     name: "{{ item }}"
     state: latest
+    update_cache: yes
   with_items:
     - docker.io
     - docker-compose
@@ -41,5 +61,5 @@
     setenforce 0 \
     yum install -y docker docker-compose kubelet kubeadm kubectl kubernetes-cni  \
     systemctl enable docker && systemctl start docker \
-    systemctl enable kubelet && systemctl start kubelet    
+    systemctl enable kubelet && systemctl start kubelet
 <% } %>

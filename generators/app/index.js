@@ -302,6 +302,12 @@ class gen extends Generator {
             }
         );
 
+        copy(
+            'ansible/_ansible.cfg',
+            'ansible/ansible.cfg',
+            { appName: this.answers.appName }
+        );
+
         // copy ansible images
         copy(
             'ansible/images/_infra-images-playbook.yml',
@@ -334,8 +340,8 @@ class gen extends Generator {
 
         if (this.answers.caasMode === 'swarm') {
             /*
-* copy ansible swarm
-*/
+            * copy ansible swarm
+            * */
             copy(
                 'ansible/swarm/_infra-base-playbook.yml',
                 `ansible/swarm/${this.answers.appName}-base-playbook.yml`,
@@ -483,6 +489,16 @@ class gen extends Generator {
             copy(
                 'ansible/k8s/_infra-k8s-playbook.yml',
                 `ansible/k8s/${this.answers.appName}-k8s-playbook.yml`,
+                {
+                    appName: this.answers.appName,
+                    defaultIp,
+                    workerToken
+                }
+            );
+            // k8s group_vars
+            copy(
+                'ansible/k8s/group_vars/_all.yml',
+                'ansible/k8s/group_vars/all.yml',
                 {
                     appName: this.answers.appName,
                     defaultIp,

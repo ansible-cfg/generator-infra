@@ -42,13 +42,13 @@ opts.each do |opt, arg|
     when '--caas-mode'
       caasModeParameter=arg
     when '--workers'
-      workers=Integer(arg) 
+      workers=Integer(arg)
   end
 end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
-  config.vm.box = "<% if (os === "ubuntu") { %>ubuntu/trusty64<% } %><% if (os === "centos") { %>centos/7<% } %>"
+  config.vm.box = "<% if (os === "ubuntu") { %>eldorplus/cloud-k8s<% } %><% if (os === "centos") { %>centos/7<% } %>"
 
   config.vm.provider 'virtualbox' do |v|
     v.linked_clone = true if Vagrant::VERSION =~ /^1.8/
@@ -61,9 +61,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       manager.vm.hostname = "<%= appName %>-manager#{manager_id}"
       manager.ssh.forward_agent = true
       manager.ssh.insert_key = true
-      #manager.vm.provision :shell, :path => "scripts/setup_ubuntu.sh"
       manager.vm.network "private_network", ip: "<%= defaultIp %>.#{20+manager_id}"
-      manager.vm.network "forwarded_port", host: "122#{20+manager_id}", guest: 22, id: 'ssh'
+      manager.vm.network "forwarded_port", host: "222#{20+manager_id}", guest: 22, id: 'ssh'
       manager.vm.network "forwarded_port", host: 8082, guest: 8082
       manager.vm.network "forwarded_port", host: 9000, guest: 9000
       manager.vm.network "forwarded_port", host: 9999, guest: 9999
@@ -81,6 +80,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         v.cpus = 2
         v.name = "<%= appName %>-manager#{manager_id}"
         v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+        v.gui = false
       end
     end
   end
@@ -92,7 +92,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       worker.ssh.insert_key = true
       #worker.vm.provision :shell, :path => "scripts/setup_ubuntu.sh"
       worker.vm.network "private_network", ip: "<%= defaultIp %>.#{30+worker_id}"
-      worker.vm.network :forwarded_port, guest: 22, host: "122#{30+worker_id}", id: 'ssh'
+      worker.vm.network :forwarded_port, guest: 22, host: "222#{30+worker_id}", id: 'ssh'
       worker.vm.synced_folder '.', '/vagrant', disabled: true
       worker.vm.provider "virtualbox" do |v|
         v.memory = <%= memoryWorkers %>
@@ -124,7 +124,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
-            
+
             worker.vm.provision "traefik", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-traefik-playbook.yml"
               ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
@@ -137,8 +137,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
-            end    
-                  
+            end
+
             worker.vm.provision "services", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-services-playbook.yml"
               ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
@@ -156,29 +156,37 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         if caasModeParameter == "k8s"
             worker.vm.provision "base", type: "ansible" do |ansible|
+              ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/k8s/<%= appName %>-base-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
+              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "images", type: "ansible" do |ansible|
+              ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/images/<%= appName %>-images-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
+              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
-            
+
             worker.vm.provision "k8s", type: "ansible" do |ansible|
+              ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/k8s/<%= appName %>-k8s-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
+              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "registry", type: "ansible" do |ansible|
+              ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/images/<%= appName %>-registry-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
+              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end

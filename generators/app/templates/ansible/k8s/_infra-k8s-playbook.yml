@@ -3,10 +3,6 @@
   become: yes
   become_user: root
   serial: 1
-  vars:
-    <%= appName %>_home: /opt/<%= appName %>
-    manager_ip: <%= defaultIp %>.21
-    worker_token : <%= workerToken %>
   roles:
     - <%= appName %>-master
 
@@ -16,9 +12,5 @@
   become: yes
   become_user: root
   serial: 1
-  vars:
-    <%= appName %>_home: /opt/<%= appName %>
-    manager_ip: <%= defaultIp %>.21
-    worker_token : <%= workerToken %> 
   roles:
     - <%= appName %>-worker
