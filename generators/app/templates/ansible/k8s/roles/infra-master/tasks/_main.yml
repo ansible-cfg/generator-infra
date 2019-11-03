@@ -1,6 +1,6 @@
 ---
 - name: Ensure kubeadm initialization
-  command: "kubeadm init --token {{worker_token}} --api-advertise-addresses={{manager_ip}} --pod-network-cidr=10.244.0.0/16"
+  command: "kubeadm init --token {{worker_token}} --apiserver-advertise-address={{manager_ip}} --pod-network-cidr=10.244.0.0/16"
 
 <% if (scheduleManager) { %>
 - name: Schedule the manager
@@ -24,8 +24,8 @@
     - jq
 <% } %>
 - name: Set --advertise-address flag in kube-apiserver static pod manifest (workaround for https://github.com/kubernetes/kubernetes/issues/34101)
-  shell: "jq '.spec.containers[0].command |= .+ [\"--advertise-address={{manager_ip}}\"]' /etc/kubernetes/manifests/kube-apiserver.json > /tmp/kube-apiserver.json && mv /tmp/kube-apiserver.json /etc/kubernetes/manifests/kube-apiserver.json" 
-    
+  shell: "jq '.spec.containers[0].command |= .+ [\"--advertise-address={{manager_ip}}\"]' /etc/kubernetes/manifests/kube-apiserver.json > /tmp/kube-apiserver.json && mv /tmp/kube-apiserver.json /etc/kubernetes/manifests/kube-apiserver.json"
+
 - name: Set --proxy-mode flag in kube-proxy daemonset (workaround for https://github.com/kubernetes/kubernetes/issues/34101)
   shell: "kubectl -n kube-system get ds -l 'component=kube-proxy' -o json | jq '.items[0].spec.template.spec.containers[0].command |= .+ [\"--proxy-mode=userspace\"]' | kubectl apply -f - && kubectl -n kube-system delete pods -l 'component=kube-proxy'"
   register: proxy
@@ -42,7 +42,7 @@
     state: directory
     mode: 0700
 
-- name: Copy <%= appName %> networks 
+- name: Copy <%= appName %> networks
   copy:
     src: files/networks/{{ item }}
     dest: "{{<%= appName %>_home}}/networks/{{ item }}"
@@ -69,7 +69,7 @@
     state: directory
     mode: 0700
 
-- name: Copy <%= appName %> namespaces 
+- name: Copy <%= appName %> namespaces
   copy:
     src: files/services/{{ item }}
     dest: "{{<%= appName %>_home}}/namespaces/{{ item }}"
@@ -78,7 +78,7 @@
     - namespace.yml
 
 - name: Create namespace <%= appName %>
-  command: "kubectl create -f {{<%= appName %>_home}}/namespaces/"  
+  command: "kubectl create -f {{<%= appName %>_home}}/namespaces/"
 
 - name: Ensure <%= appName %> applications
   file:
@@ -86,7 +86,7 @@
     state: directory
     mode: 0700
 
-- name: Copy <%= appName %> applications 
+- name: Copy <%= appName %> applications
   copy:
     src: files/services/{{ item }}
     dest: "{{<%= appName %>_home}}/applications/{{ item }}"
@@ -97,24 +97,24 @@
     - jenkins.yml
     - traefik.yml
 
-<% if (tools.indexOf("traefik") > -1) { %> 
+<% if (tools.indexOf("traefik") > -1) { %>
 - name: Launch traefik
   command : "kubectl create -f {{<%= appName %>_home}}/applications/traefik.yml"
-<% } %>   
+<% } %>
 
-<% if (tools.indexOf("sonarqube") > -1) { %>  
+<% if (tools.indexOf("sonarqube") > -1) { %>
 - name: Launch sonarqube
   command : "kubectl create -f {{<%= appName %>_home}}/applications/sonarqube.yml"
-<% } %>   
-  
-<% if (tools.indexOf("artifactory") > -1) { %> 
+<% } %>
+
+<% if (tools.indexOf("artifactory") > -1) { %>
 - name: Launch artifactory
   command : "kubectl create -f {{<%= appName %>_home}}/applications/artifactory.yml"
-<% } %>   
+<% } %>
 
-<% if (tools.indexOf("jenkins") > -1) { %> 
+<% if (tools.indexOf("jenkins") > -1) { %>
 - name: Launch jenkins
   command : "kubectl create -f {{<%= appName %>_home}}/applications/jenkins.yml"
-<% } %>   
+<% } %>
 
 

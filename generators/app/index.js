@@ -505,7 +505,16 @@ class gen extends Generator {
                     workerToken
                 }
             );
+
             // k8s roles
+            copy(
+                'ansible/k8s/roles/infra-base/handlers/_main.yml',
+                `ansible/k8s/roles/${this.answers.appName}-base/handlers/main.yml`,
+                {
+                    appName: this.answers.appName,
+                    os: this.answers.os
+                }
+            );
             copy(
                 'ansible/k8s/roles/infra-base/tasks/_main.yml',
                 `ansible/k8s/roles/${this.answers.appName}-base/tasks/main.yml`,
@@ -513,6 +522,22 @@ class gen extends Generator {
                     appName: this.answers.appName,
                     os: this.answers.os
                 }
+            );
+            copy(
+                'ansible/k8s/roles/infra-base/tasks/_docker-compose.yml',
+                `ansible/k8s/roles/${this.answers.appName}-base/tasks/docker-compose.yml`,
+            );
+            copy(
+                'ansible/k8s/roles/infra-base/tasks/_docker-users.yml',
+                `ansible/k8s/roles/${this.answers.appName}-base/tasks/docker-users.yml`,
+            );
+            copy(
+                'ansible/k8s/roles/infra-base/tasks/_setup-debian.yml',
+                `ansible/k8s/roles/${this.answers.appName}-base/tasks/setup-debian.yml`,
+            );
+            copy(
+                'ansible/k8s/roles/infra-base/tasks/_setup-redhat.yml',
+                `ansible/k8s/roles/${this.answers.appName}-base/tasks/setup-redhat.yml`,
             );
             copy(
                 'ansible/k8s/roles/infra-master/tasks/_main.yml',

@@ -1,65 +1,51 @@
 ---
+- name: Inculde Setup.
+#  include_tasks: <% if (os === "ubuntu") { %> setup-debian.yml <% } else if (os === "centos") { %> setup-redhat.yml <% } %>
 <% if (os === "ubuntu") { %>
-- name: Ensure Base Tools
-  become: yes
-  apt:
-    name: "{{ packages }}"
-    state: present
-    update_cache: yes
-
-- name: Ensure Docker Apt Key
-  become: yes
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-
-- name: Ensure Docker Repository
-  become: yes
-  apt_repository:
-    repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'
-    state: present
-    update_cache: yes
-
-- name: Ensure Google Cloud Apt Key
-  apt_key:
-    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-    state: present
-
-- name: Ensure Kubernetes Repository
-  apt_repository:
-    repo: 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
-    state: present
-    filename: kubernetes.list
-
-- name: Ensure Base Kubernetes
-  apt:
-    name: "{{ item }}"
-    state: latest
-    update_cache: yes
-  with_items:
-    - docker.io
-    - docker-compose
-    - kubelet
-    - kubeadm
-    - kubectl
-    - kubernetes-cni
+  include_tasks: setup-debian.yml
 <% } %>
-
 <% if (os === "centos") { %>
-- name: Ensure Base Kubernetes
-  shell: >
-    cat <<EOF > /etc/yum.repos.d/kubernetes.repo \
-    [kubernetes] \
-    name=Kubernetes \
-    baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64 \
-    enabled=1 \
-    gpgcheck=1 \
-    repo_gpgcheck=1 \
-    gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg \
-          https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg \
-    EOF \
-    setenforce 0 \
-    yum install -y docker docker-compose kubelet kubeadm kubectl kubernetes-cni  \
-    systemctl enable docker && systemctl start docker \
-    systemctl enable kubelet && systemctl start kubelet
+  include_tasks: setup-redhat.yml
 <% } %>
+
+- name: Install Docker.
+  package:
+      name: "{{ docker_package }}"
+      state: "{{ docker_package_state }}"
+  notify: restart docker
+
+- name: Ensure Docker is started and enabled at boot.
+  service:
+      name: docker
+      state: "{{ docker_service_state }}"
+      enabled: "{{ docker_service_enabled }}"
+
+- name: Install Docker Compose.
+  include_tasks: docker-compose.yml
+  when: docker_install_compose | bool
+
+- name: Ensure User in Docker Group.
+  include_tasks: docker-users.yml
+  when: docker_users | length > 0
+
+- name: Ensure Base Kubernetes
+  apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+  with_items:
+      - kubelet
+      - kubeadm
+      - kubectl
+      - kubernetes-cni
+
+- name: Ensure swap is off
+  become: yes
+  command: "swapoff -a"
+
+- name: Remove swap from fstab
+  become: yes
+  lineinfile:
+      dest: /etc/fstab
+      regexp: 'swap'
+      state: absent

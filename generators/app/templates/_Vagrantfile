@@ -106,49 +106,49 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         if caasModeParameter == "swarm"
             worker.vm.provision "base", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-base-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "images", type: "ansible" do |ansible|
               ansible.playbook = "ansible/images/<%= appName %>-images-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "swarm", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-swarm-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "traefik", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-traefik-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "elk", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-elk-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "services", type: "ansible" do |ansible|
               ansible.playbook = "ansible/swarm/<%= appName %>-services-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
 
             worker.vm.provision "registry", type: "ansible" do |ansible|
               ansible.playbook = "ansible/images/<%= appName %>-registry-playbook.yml"
-              ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
+              ansible.inventory_path = "ansible/<%= appName %>-hosts"
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
@@ -159,7 +159,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/k8s/<%= appName %>-base-playbook.yml"
               ansible.inventory_path = "ansible/<%= appName %>-hosts"
-              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
@@ -168,7 +167,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/images/<%= appName %>-images-playbook.yml"
               ansible.inventory_path = "ansible/<%= appName %>-hosts"
-              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
@@ -177,7 +175,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/k8s/<%= appName %>-k8s-playbook.yml"
               ansible.inventory_path = "ansible/<%= appName %>-hosts"
-              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end
@@ -186,7 +183,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               ansible.config_file = "ansible/ansible.cfg"
               ansible.playbook = "ansible/images/<%= appName %>-registry-playbook.yml"
               ansible.inventory_path = "ansible/<%= appName %>-hosts"
-              #ansible.raw_arguments = ["--inventory=ansible/<%= appName %>-hosts"]
               ansible.verbose = "vv"
               ansible.limit = "all"
             end

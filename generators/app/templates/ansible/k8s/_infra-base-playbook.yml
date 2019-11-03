@@ -18,5 +18,8 @@
      raw: test -e /usr/bin/python || (yum -y update && yum install -y python-minimal)
      changed_when: False
   <% } %>
+   - name: Gathering Facts
+     setup:
+
   roles:
     - <%= appName %>-base
