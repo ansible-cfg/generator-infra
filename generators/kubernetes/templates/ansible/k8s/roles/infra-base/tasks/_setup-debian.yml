@@ -1,0 +1,54 @@
+---
+- name: Ensure Base Tools
+  become: yes
+  apt:
+      name: "{{ packages }}"
+      state: present
+      update_cache: yes
+
+- name: Ensure old versions of Docker are not installed.
+  package:
+      name:
+          - docker
+          - docker-engine
+      state: absent
+
+- name: Ensure Docker Apt Key.
+  apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+      state: present
+  register: add_repository_key
+  ignore_errors: "{{ docker_apt_ignore_key_error }}"
+
+- name: Ensure curl is present (on older systems without SNI).
+  package: name=curl state=present
+  when: add_repository_key is failed
+
+- name: Add Docker apt key (alternative for older systems without SNI).
+  shell: |
+      set -o pipefail
+      curl -sSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  args:
+      warn: false
+  when: add_repository_key is failed
+
+- name: Ensure Docker Repository.
+  become: yes
+  apt_repository:
+      repo: "{{ docker_apt_repository }}"
+      state: present
+      filename: docker
+      update_cache: true
+
+- name: Ensure Google Cloud Apt Key
+  apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+- name: Ensure Kubernetes Repository
+  apt_repository:
+      repo: 'deb https://apt.kubernetes.io/ kubernetes-xenial main'
+      state: present
+      filename: kubernetes
+      update_cache: true

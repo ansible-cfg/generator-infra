@@ -14,7 +14,7 @@ const expectedFiles = {
         }
     },
     vagrant: {
-        default: 'Vagrantfile'
+        default: '_Vagrantfile'
     }
 };
 

@@ -40,7 +40,7 @@ describe('Simple infrastructure', () => {
                 .on('end', done);
         });
 
-        it('creates expected files for default generation - Vagrantfile', () => {
+        it('creates expected files for default generation - _Vagrantfile', () => {
             assert.file(expectedFiles.vagrant.default);
             assert.fileContent(expectedFiles.vagrant.default, /ubuntu\/trusty64/);
         });
