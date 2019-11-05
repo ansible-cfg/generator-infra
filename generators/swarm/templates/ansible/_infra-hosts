@@ -1,9 +1,0 @@
-[<%= appName %>_managers]
-<% for(var i = 0; i < managers; i++) { %>
-<%= appName %>-manager<%= i+1 %> env=dev ansible_ssh_host=<%= defaultIp %>.2<%= i+1 %> ansible_ssh_user=<% if (os === "ubuntu") { %>vagrant<% } %><% if (os === "centos") { %>root<% } %> ansible_ssh_private_key_file=.vagrant/machines/<%= appName %>-manager<%= i+1 %>/virtualbox/private_key
-<% } %>
-
-[<%= appName %>_workers]
-<% for(var i = 0; i < workers; i++) { %>
-<%= appName %>-worker<%= i+1 %> env=dev ansible_ssh_host=<%= defaultIp %>.3<%= i+1 %> ansible_ssh_user=<% if (os === "ubuntu") { %>vagrant<% } %><% if (os === "centos") { %>root<% } %> ansible_ssh_private_key_file=.vagrant/machines/<%= appName %>-worker<%= i+1 %>/virtualbox/private_key
-<% } %>

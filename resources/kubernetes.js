@@ -1,8 +1,4 @@
-const {
-    exists,
-    // existsSync,
-    statSync
-} = require('fs');
+const { exists, statSync } = require('fs');
 const { join } = require('path');
 const uuidV1 = require('uuid/v1');
 const { exec } = require('child_process');
@@ -251,29 +247,6 @@ module.exports = {
             message: '(2/8) Name of my infrastructure',
             // eslint-disable-next-line no-nested-ternary
             validate: input => (!input ? 'Project name cannot be empty' : !/\w+/.test(input) ? 'Project name should only consist of 0~9, a~z, A~Z, _, .' : true),
-            /**
-            validate: input => (
-                // eslint-disable-next-line no-nested-ternary
-                !input ? 'Please enter a value' : !/\w+/.test(input) ? 'Project name should only consist of 0~9, a~z, A~Z, _, .' :
-                    statSync(this.destinationPath(input)).isDirectory() ? 'Project already exist' : !existsSync(this.destinationPath(input)) ? true : true
-            ),
-
-            validate: (name) => {
-                if (!name) {
-                    return 'Project name cannot be empty';
-                }
-                if (!/\w+/.test(name)) {
-                    return 'Project name should only consist of 0~9, a~z, A~Z, _, .';
-                }
-                if (!fs.existsSync(this.destinationPath(name))) {
-                    return true;
-                }
-                if (require('fs').statSync(this.destinationPath(name)).isDirectory()) { // eslint-disable-line
-                    return 'Project already exist';
-                }
-                return true;
-            }
-            * */
         },
         {
             type: 'list',

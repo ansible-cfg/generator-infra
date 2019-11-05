@@ -1,8 +1,4 @@
-const {
-    exists,
-    // existsSync,
-    statSync
-} = require('fs');
+const { exists, statSync } = require('fs');
 const { join } = require('path');
 const exec = require('child_process').exec;
 
@@ -249,6 +245,7 @@ module.exports = {
             type: 'input',
             name: 'appName',
             message: '(2/8) Name of my infrastructure',
+            // eslint-disable-next-line no-nested-ternary
             validate: input => (!input ? 'Project name cannot be empty' : !/\w+/.test(input) ? 'Project name should only consist of 0~9, a~z, A~Z, _, .' : true),
         },
         {
